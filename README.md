@@ -4,7 +4,7 @@ PDScript
 PDScript is a lua-based scripting environment aiming at providing real time interaction with PureData. PDScript contains a Lua API that wraps LibPD's functionalities with the adition of patch creation and editing mechanisms. 
 
 The current incarnation of pdscript is on a form of a real time command prompt in form of a VST, which can be integrated with compatible DAWs, allowing its users to user imperative instruction - commands - to create and controll PD patches. The first prototype can be used to produce complex patches, for live coding and so on. The first prototype version was developed over the barebone juce project distributed along with [Pd Pulp](http://pd-pulp.net/) that utilizes libpd to be able to use pure data as the sound engine for juce audio plugins.
- 
+
 Future PDScript versions will allow for the usage of the Lua API outside of the VST scope, and will also include an improved GUI for the PDScript command prompt. 
 
 The information below came from the original Pd Pulp project, with some updates.

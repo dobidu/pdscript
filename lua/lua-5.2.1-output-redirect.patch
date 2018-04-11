@@ -1,0 +1,96 @@
+diff -uNr lua-5.2.1-orig/src/liolib.c lua-5.2.1-redirect/src/liolib.c
+--- lua-5.2.1-orig/src/liolib.c	2011-11-25 13:50:03.000000000 +0100
++++ lua-5.2.1-redirect/src/liolib.c	2012-08-10 11:16:48.880471872 +0200
+@@ -28,6 +28,8 @@
+ #include "lauxlib.h"
+ #include "lualib.h"
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ 
+ /*
+diff -uNr lua-5.2.1-orig/src/lmem.c lua-5.2.1-redirect/src/lmem.c
+--- lua-5.2.1-orig/src/lmem.c	2012-05-23 17:41:53.000000000 +0200
++++ lua-5.2.1-redirect/src/lmem.c	2012-08-10 11:16:48.880471872 +0200
+@@ -19,6 +19,8 @@
+ #include "lobject.h"
+ #include "lstate.h"
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ 
+ /*
+diff -uNr lua-5.2.1-orig/src/lobject.c lua-5.2.1-redirect/src/lobject.c
+--- lua-5.2.1-orig/src/lobject.c	2011-11-30 20:30:16.000000000 +0100
++++ lua-5.2.1-redirect/src/lobject.c	2012-08-10 11:16:48.880471872 +0200
+@@ -23,6 +23,8 @@
+ #include "lstring.h"
+ #include "lvm.h"
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ 
+ LUAI_DDEF const TValue luaO_nilobject_ = {NILCONSTANT};
+diff -uNr lua-5.2.1-orig/src/lstrlib.c lua-5.2.1-redirect/src/lstrlib.c
+--- lua-5.2.1-orig/src/lstrlib.c	2012-05-23 17:37:09.000000000 +0200
++++ lua-5.2.1-redirect/src/lstrlib.c	2012-08-10 11:16:48.880471872 +0200
+@@ -19,6 +19,8 @@
+ #include "lauxlib.h"
+ #include "lualib.h"
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ /*
+ ** maximum number of captures that a pattern can do during
+diff -uNr lua-5.2.1-orig/src/lua.c lua-5.2.1-redirect/src/lua.c
+--- lua-5.2.1-orig/src/lua.c	2012-05-23 17:37:09.000000000 +0200
++++ lua-5.2.1-redirect/src/lua.c	2012-08-10 11:16:48.880471872 +0200
+@@ -17,6 +17,8 @@
+ #include "lauxlib.h"
+ #include "lualib.h"
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ #if !defined(LUA_PROMPT)
+ #define LUA_PROMPT		"> "
+diff -uNr lua-5.2.1-orig/src/luaconf.h lua-5.2.1-redirect/src/luaconf.h
+--- lua-5.2.1-orig/src/luaconf.h	2012-05-11 16:14:42.000000000 +0200
++++ lua-5.2.1-redirect/src/luaconf.h	2012-08-10 11:16:48.880471872 +0200
+@@ -11,6 +11,8 @@
+ #include <limits.h>
+ #include <stddef.h>
+ 
++/* Lua output redirection */
++#include "luaredir.h"
+ 
+ /*
+ ** ==================================================================
+diff -uNr lua-5.2.1-orig/src/luaredir.h lua-5.2.1-redirect/src/luaredir.h
+--- lua-5.2.1-orig/src/luaredir.h	1970-01-01 01:00:00.000000000 +0100
++++ lua-5.2.1-redirect/src/luaredir.h	2012-08-10 11:16:48.880471872 +0200
+@@ -0,0 +1,20 @@
++/*
++** Hooks to redirect Lua's output to standart streams
++*/
++
++#ifdef LUA_REDIRECT
++
++#include <stdarg.h>
++#include <stdio.h>
++
++int (*lua_fprintf)(FILE* stream, const char* msg, ...);
++int (*lua_fputs)(const char* msg, FILE* stream);
++int (*lua_fwrite)(const void* ptr, size_t size, size_t count, FILE* stream);
++int (*lua_printf)(const char* msg, ...);
++
++#define fprintf(...) lua_fprintf(__VA_ARGS__)
++#define fputs        lua_fputs
++#define fwrite       lua_fwrite
++#define printf(...)  lua_printf(__VA_ARGS__)
++
++#endif
